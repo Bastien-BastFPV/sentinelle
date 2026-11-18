@@ -1,0 +1,30 @@
+2026-11-11 10:47:50 WARN Utilisation mémoire à 82%
+2026-11-11 10:47:58 timeout during handshake with db-primary
+2026-11-11 10:48:10 WARN Utilisation mémoire à 98%
+2026-11-11 10:48:24 INFO Connexion réussie pour user bob
+2026-11-11 10:48:42 log Requête traitée en 3493ms
+2026-11-11 10:48:54 INFO Service redis démarré
+2026-11-11 10:49:10 INFO Service postgresql démarré
+2026-11-11 10:49:30 INFO Service cron démarré
+2026-11-11 10:49:44 ERROR Connexion refusée pour user webmaster
+2026-11-11 10:49:58 timeout waiting for response from cache-01
+2026-11-11 10:50:11 INFO Connexion réussie pour user alice
+2026-11-11 10:50:16 timeout waiting for response from db-replica
+2026-11-11 10:50:32 log Fichier access.log sauvegardé
+2026-11-11 10:50:43 INFO Requête traitée en 3536ms
+2026-11-11 10:50:51 log Requête traitée en 3838ms
+2026-11-11 10:50:58 ERROR Connexion refusée pour user webmaster
+2026-11-11 10:51:06 log Requête traitée en 2847ms
+2026-11-11 10:51:17 INFO Fichier auth.log sauvegardé
+2026-11-11 10:51:32 timeout waiting for response from db-replica
+2026-11-11 10:51:50 INFO Requête traitée en 2316ms
+2026-11-11 10:51:56 INFO Service redis démarré
+2026-11-11 10:52:07 WARN Utilisation mémoire à 99%
+2026-11-11 10:52:20 log Utilisation mémoire à 95%
+2026-11-11 10:52:30 log Certificat expire dans 27 jours
+2026-11-11 10:52:37 INFO Requête traitée en 4194ms
+2026-11-11 10:52:43 WARN Utilisation mémoire à 66%
+2026-11-11 10:52:48 INFO Service nginx démarré
+2026-11-11 10:53:05 WARN Utilisation mémoire à 62%
+2026-11-11 10:53:16 WARN Certificat expire dans 1 jours
+2026-11-11 10:53:35 log Timeout de la base de données après 2854ms
