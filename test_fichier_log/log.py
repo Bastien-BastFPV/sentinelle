@@ -7,64 +7,40 @@ nb_warning = 0
 nb_info = 0
 #verifier les erreurs:
 def error_test(ligne, num_ligne):
-    global nb_error, nb_warrning, nb_critical
-    if "error connexion refusée" in ligne.lower():
-        nb_error += 1
-        print(f"l.{num_ligne}: {ligne}")
-    elif "error timeout de la base de données" in ligne.lower():
-        nb_error += 1
-        print(f"l.{num_ligne}: {ligne}")
-    elif "error fichier introuvable" in ligne.lower():
+    global nb_error, nb_failed, nb_timeout, nb_warning, nb_info
+    if "error connexion refusée" in ligne.lower() or "error fichier introuvable" in ligne.lower() or "error timeout de la base de données" in ligne.lower():
         nb_error += 1
         print(f"l.{num_ligne}: {ligne}")
 
 #verifier les failed:
 def failed_test(ligne, num_ligne):
-    global nb_error, nb_warrning, nb_critical
-    if "failed password for root" in ligne.lower():
-        nb_failed += 1
-        print(f"l.{num_ligne}: {ligne}")
-    elif "failed password" in ligne.lower():
+    global nb_error, nb_failed, nb_timeout, nb_warning, nb_info
+    if "failed password for root" in ligne.lower() or "failed password" in ligne.lower():
         nb_failed += 1
         print(f"l.{num_ligne}: {ligne}")
 
 #verifier les timeout:
 def timeout_test(ligne, num_ligne):
-    global nb_error, nb_warrning, nb_critical
-    if "timeout waiting for response" in ligne.lower():
-        nb_timeout += 1
-        print(f"l.{num_ligne}: {ligne}")
-    elif "timeout during handshake" in ligne.lower():
+    global nb_error, nb_failed, nb_timeout, nb_warning, nb_info
+    if "timeout waiting for response" in ligne.lower() or "timeout during handshake" in ligne.lower():
         nb_timeout += 1
         print(f"l.{num_ligne}: {ligne}")
 
 #verifier les warn:
 def warn_test(ligne, num_ligne):
-    global nb_error, nb_warrning, nb_critical
-    if "warn utilisation mémoire" in ligne.lower():
-        nb_warning += 1
-        print(f"l.{num_ligne}: {ligne}")
-    elif "warn certificat expire" in ligne.lower():
+    global nb_error, nb_failed, nb_timeout, nb_warning, nb_info
+    if "warn utilisation mémoire" in ligne.lower() or "warn certificat expire" in ligne.lower():
         nb_warning += 1
         print(f"l.{num_ligne}: {ligne}")
 
 #verifier les info:
 def info_test(ligne, num_ligne):
-    global nb_error, nb_warrning, nb_critical
-    if "info connexion réussie" in ligne.lower():
-        nb_info += 1
-        print(f"l.{num_ligne}: {ligne}")
-    elif "info fichier" in ligne.lower():
-        nb_info += 1
-        print(f"l.{num_ligne}: {ligne}")
-    elif "info service" in ligne.lower():
-        nb_info += 1
-        print(f"l.{num_ligne}: {ligne}")
-    elif "info requête traitée" in ligne.lower():
+    global nb_error, nb_failed, nb_timeout, nb_warning, nb_info
+    if "info connexion réussie" in ligne.lower() or "info requête traitée" in ligne.lower() or "info service" in ligne.lower() or "info fichier" in ligne.lower():
         nb_info += 1
         print(f"l.{num_ligne}: {ligne}")
 
-with open("exemple.log", "r", encoding="utf-8") as fichier:
+with open(fichier, "r", encoding="utf-8") as fichier:
     for ligne in fichier:
         num_ligne += 1
         error_test(ligne, num_ligne)
@@ -73,5 +49,4 @@ with open("exemple.log", "r", encoding="utf-8") as fichier:
         warn_test(ligne, num_ligne)
         info_test(ligne, num_ligne)
 
-
-print(f"le fichier contient: {nb_error} erreurs, {nb_warning} warnings")
+print(f"le fichier contient: {nb_error} erreurs, {nb_failed} failed, {nb_timeout}, timeout, {nb_warning} warnings, {nb_info} infos ; Nombre totale d'erreurs: {nb_error+nb_failed+nb_timeout+nb_warning+nb_info}")
