@@ -1,74 +1,600 @@
-# generer_log.py
-# Génère un fichier exemple.log avec des incidents variés.
-# À exécuter UNE FOIS par l'enseignant : python generer_log.py
-
-import random
-from datetime import datetime, timedelta
-
-# Configuration
-NOMBRE_LIGNES = 600
-FICHIER_SORTIE = "exemple.log"
-
-# Motifs d'incident que les élèves devront détecter
-INCIDENTS = [
-    "ERROR Connexion refusée pour user {user}",
-    "ERROR Timeout de la base de données après {ms}ms",
-    "ERROR Fichier introuvable : /var/log/{fichier}",
-    "Failed password for {user} from 192.168.1.{ip}",
-    "Failed password for root from 10.0.0.{ip}",
-    "timeout waiting for response from {host}",
-    "timeout during handshake with {host}",
-]
-
-# Lignes normales (bruit de fond)
-NORMALES = [
-    "INFO Connexion réussie pour user {user}",
-    "INFO Fichier {fichier} sauvegardé",
-    "INFO Service {service} démarré",
-    "INFO Requête traitée en {ms}ms",
-    "WARN Utilisation mémoire à {pct}%",
-    "WARN Certificat expire dans {jours} jours",
-]
-
-USERS = ["admin", "alice", "bob", "root", "webmaster", "backup"]
-FICHIERS = ["access.log", "error.log", "auth.log", "syslog", "backup.tar.gz"]
-HOSTS = ["db-primary", "db-replica", "cache-01", "api-gateway", "storage-02"]
-SERVICES = ["nginx", "postgresql", "redis", "ssh", "cron"]
-
-def generer_ligne(timestamp):
-    """Génère une ligne de log, avec ~30% de chance d'être un incident."""
-    if random.random() < 0.30:  # 30% d'incidents
-        modele = random.choice(INCIDENTS)
-    else:
-        modele = random.choice(NORMALES)
-
-    return modele.format(
-        user=random.choice(USERS),
-        ip=random.randint(1, 254),
-        ms=random.randint(100, 5000),
-        fichier=random.choice(FICHIERS),
-        host=random.choice(HOSTS),
-        service=random.choice(SERVICES),
-        pct=random.randint(60, 99),
-        jours=random.randint(1, 30),
-    )
-
-def main():
-    lignes = []
-    # Commencer il y a 2 heures, avancer de quelques secondes à chaque ligne
-    timestamp = datetime.now() - timedelta(hours=2)
-
-    for _ in range(NOMBRE_LIGNES):
-        # Avancer le temps de 5 à 20 secondes
-        timestamp += timedelta(seconds=random.randint(5, 20))
-        moment = timestamp.strftime("%Y-%m-%d %H:%M:%S")
-        contenu = generer_ligne(timestamp)
-        lignes.append(f"{moment} {contenu}")
-
-    with open(FICHIER_SORTIE, "w", encoding="utf-8") as f:
-        f.write("\n".join(lignes) + "\n")
-
-    print(f"Fichier '{FICHIER_SORTIE}' généré : {len(lignes)} lignes.")
-
-if __name__ == "__main__":
-    main()
+2026-11-25 12:19:04 WARN Utilisation mémoire à 77%
+2026-11-25 12:19:24 Failed password for root from 192.168.1.131
+2026-11-25 12:19:44 INFO Requête traitée en 4355ms
+2026-11-25 12:19:59 ERROR Fichier introuvable : /var/log/error.log
+2026-11-25 12:20:18 INFO Requête traitée en 2779ms
+2026-11-25 12:20:23 ERROR Fichier introuvable : /var/log/auth.log
+2026-11-25 12:20:43 timeout during handshake with db-replica
+2026-11-25 12:20:57 WARN Utilisation mémoire à 65%
+2026-11-25 12:21:06 INFO Service cron démarré
+2026-11-25 12:21:17 INFO Service cron démarré
+2026-11-25 12:21:28 INFO Requête traitée en 222ms
+2026-11-25 12:21:41 Failed password for admin from 192.168.1.139
+2026-11-25 12:21:54 timeout during handshake with api-gateway
+2026-11-25 12:22:09 WARN Certificat expire dans 16 jours
+2026-11-25 12:22:22 Failed password for root from 10.0.0.200
+2026-11-25 12:22:30 WARN Utilisation mémoire à 92%
+2026-11-25 12:22:38 INFO Requête traitée en 4334ms
+2026-11-25 12:22:45 INFO Fichier syslog sauvegardé
+2026-11-25 12:22:54 WARN Certificat expire dans 5 jours
+2026-11-25 12:23:00 WARN Certificat expire dans 11 jours
+2026-11-25 12:23:13 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 12:23:28 INFO Service nginx démarré
+2026-11-25 12:23:40 WARN Utilisation mémoire à 77%
+2026-11-25 12:23:56 timeout during handshake with cache-01
+2026-11-25 12:24:13 INFO Connexion réussie pour user alice
+2026-11-25 12:24:19 ERROR Timeout de la base de données après 3650ms
+2026-11-25 12:24:29 INFO Service postgresql démarré
+2026-11-25 12:24:41 INFO Requête traitée en 2133ms
+2026-11-25 12:24:46 Failed password for root from 10.0.0.232
+2026-11-25 12:25:05 ERROR Fichier introuvable : /var/log/error.log
+2026-11-25 12:25:16 Failed password for bob from 192.168.1.153
+2026-11-25 12:25:33 INFO Fichier auth.log sauvegardé
+2026-11-25 12:25:49 INFO Service postgresql démarré
+2026-11-25 12:25:56 INFO Requête traitée en 1218ms
+2026-11-25 12:26:13 WARN Certificat expire dans 29 jours
+2026-11-25 12:26:30 WARN Utilisation mémoire à 68%
+2026-11-25 12:26:49 WARN Utilisation mémoire à 81%
+2026-11-25 12:27:03 WARN Utilisation mémoire à 99%
+2026-11-25 12:27:08 WARN Certificat expire dans 18 jours
+2026-11-25 12:27:21 Failed password for bob from 192.168.1.176
+2026-11-25 12:27:31 Failed password for root from 10.0.0.140
+2026-11-25 12:27:45 INFO Service nginx démarré
+2026-11-25 12:27:58 INFO Requête traitée en 4961ms
+2026-11-25 12:28:17 INFO Fichier auth.log sauvegardé
+2026-11-25 12:28:27 WARN Utilisation mémoire à 60%
+2026-11-25 12:28:35 timeout during handshake with cache-01
+2026-11-25 12:28:46 WARN Certificat expire dans 22 jours
+2026-11-25 12:28:55 ERROR Fichier introuvable : /var/log/backup.tar.gz
+2026-11-25 12:29:08 WARN Certificat expire dans 9 jours
+2026-11-25 12:29:25 timeout waiting for response from cache-01
+2026-11-25 12:29:41 INFO Fichier syslog sauvegardé
+2026-11-25 12:29:50 WARN Certificat expire dans 20 jours
+2026-11-25 12:30:06 INFO Connexion réussie pour user webmaster
+2026-11-25 12:30:12 WARN Utilisation mémoire à 95%
+2026-11-25 12:30:30 ERROR Fichier introuvable : /var/log/auth.log
+2026-11-25 12:30:37 INFO Service ssh démarré
+2026-11-25 12:30:52 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 12:31:08 INFO Fichier access.log sauvegardé
+2026-11-25 12:31:23 INFO Connexion réussie pour user webmaster
+2026-11-25 12:31:38 INFO Requête traitée en 3708ms
+2026-11-25 12:31:46 ERROR Connexion refusée pour user root
+2026-11-25 12:31:53 WARN Certificat expire dans 19 jours
+2026-11-25 12:31:58 WARN Utilisation mémoire à 93%
+2026-11-25 12:32:18 ERROR Fichier introuvable : /var/log/auth.log
+2026-11-25 12:32:33 WARN Certificat expire dans 27 jours
+2026-11-25 12:32:44 INFO Requête traitée en 196ms
+2026-11-25 12:32:51 INFO Requête traitée en 1773ms
+2026-11-25 12:33:10 WARN Certificat expire dans 19 jours
+2026-11-25 12:33:19 WARN Utilisation mémoire à 64%
+2026-11-25 12:33:33 WARN Certificat expire dans 18 jours
+2026-11-25 12:33:49 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 12:34:08 INFO Requête traitée en 593ms
+2026-11-25 12:34:17 ERROR Connexion refusée pour user root
+2026-11-25 12:34:31 ERROR Connexion refusée pour user bob
+2026-11-25 12:34:44 INFO Connexion réussie pour user bob
+2026-11-25 12:35:03 WARN Utilisation mémoire à 72%
+2026-11-25 12:35:18 WARN Certificat expire dans 28 jours
+2026-11-25 12:35:23 WARN Utilisation mémoire à 66%
+2026-11-25 12:35:33 INFO Connexion réussie pour user admin
+2026-11-25 12:35:38 WARN Utilisation mémoire à 70%
+2026-11-25 12:35:43 WARN Certificat expire dans 5 jours
+2026-11-25 12:35:48 INFO Fichier access.log sauvegardé
+2026-11-25 12:35:57 ERROR Fichier introuvable : /var/log/syslog
+2026-11-25 12:36:03 timeout waiting for response from api-gateway
+2026-11-25 12:36:14 INFO Requête traitée en 946ms
+2026-11-25 12:36:31 WARN Utilisation mémoire à 78%
+2026-11-25 12:36:49 WARN Certificat expire dans 3 jours
+2026-11-25 12:37:09 INFO Requête traitée en 1805ms
+2026-11-25 12:37:19 timeout waiting for response from db-replica
+2026-11-25 12:37:37 INFO Service nginx démarré
+2026-11-25 12:37:46 timeout during handshake with storage-02
+2026-11-25 12:38:03 ERROR Connexion refusée pour user admin
+2026-11-25 12:38:22 timeout waiting for response from api-gateway
+2026-11-25 12:38:36 INFO Service postgresql démarré
+2026-11-25 12:38:54 WARN Certificat expire dans 10 jours
+2026-11-25 12:39:03 INFO Connexion réussie pour user admin
+2026-11-25 12:39:14 WARN Certificat expire dans 30 jours
+2026-11-25 12:39:21 timeout during handshake with storage-02
+2026-11-25 12:39:29 Failed password for bob from 192.168.1.115
+2026-11-25 12:39:46 INFO Service cron démarré
+2026-11-25 12:40:03 WARN Utilisation mémoire à 90%
+2026-11-25 12:40:15 timeout waiting for response from cache-01
+2026-11-25 12:40:28 INFO Service redis démarré
+2026-11-25 12:40:35 WARN Certificat expire dans 2 jours
+2026-11-25 12:40:42 Failed password for root from 192.168.1.135
+2026-11-25 12:40:59 INFO Connexion réussie pour user alice
+2026-11-25 12:41:16 INFO Service ssh démarré
+2026-11-25 12:41:27 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 12:41:43 INFO Requête traitée en 4225ms
+2026-11-25 12:41:53 ERROR Timeout de la base de données après 4353ms
+2026-11-25 12:42:00 INFO Requête traitée en 4380ms
+2026-11-25 12:42:08 Failed password for root from 10.0.0.114
+2026-11-25 12:42:23 INFO Requête traitée en 3182ms
+2026-11-25 12:42:31 INFO Service redis démarré
+2026-11-25 12:42:45 WARN Certificat expire dans 29 jours
+2026-11-25 12:42:52 WARN Utilisation mémoire à 69%
+2026-11-25 12:42:58 INFO Service postgresql démarré
+2026-11-25 12:43:16 INFO Requête traitée en 4902ms
+2026-11-25 12:43:22 INFO Connexion réussie pour user root
+2026-11-25 12:43:40 ERROR Connexion refusée pour user root
+2026-11-25 12:43:52 INFO Fichier syslog sauvegardé
+2026-11-25 12:44:09 WARN Utilisation mémoire à 81%
+2026-11-25 12:44:23 WARN Certificat expire dans 25 jours
+2026-11-25 12:44:36 INFO Requête traitée en 2882ms
+2026-11-25 12:44:47 INFO Requête traitée en 4282ms
+2026-11-25 12:44:55 INFO Service ssh démarré
+2026-11-25 12:45:02 WARN Utilisation mémoire à 74%
+2026-11-25 12:45:09 WARN Certificat expire dans 3 jours
+2026-11-25 12:45:22 ERROR Timeout de la base de données après 2517ms
+2026-11-25 12:45:41 INFO Service ssh démarré
+2026-11-25 12:45:55 INFO Requête traitée en 4423ms
+2026-11-25 12:46:00 WARN Certificat expire dans 8 jours
+2026-11-25 12:46:08 ERROR Connexion refusée pour user webmaster
+2026-11-25 12:46:20 INFO Fichier error.log sauvegardé
+2026-11-25 12:46:35 timeout waiting for response from db-replica
+2026-11-25 12:46:52 INFO Fichier syslog sauvegardé
+2026-11-25 12:47:03 timeout during handshake with storage-02
+2026-11-25 12:47:14 ERROR Connexion refusée pour user root
+2026-11-25 12:47:25 WARN Utilisation mémoire à 78%
+2026-11-25 12:47:41 WARN Certificat expire dans 28 jours
+2026-11-25 12:48:00 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 12:48:20 INFO Requête traitée en 2876ms
+2026-11-25 12:48:39 INFO Fichier auth.log sauvegardé
+2026-11-25 12:48:59 INFO Requête traitée en 1800ms
+2026-11-25 12:49:09 Failed password for root from 10.0.0.163
+2026-11-25 12:49:14 INFO Connexion réussie pour user root
+2026-11-25 12:49:30 INFO Requête traitée en 1331ms
+2026-11-25 12:49:41 WARN Certificat expire dans 1 jours
+2026-11-25 12:49:49 WARN Certificat expire dans 25 jours
+2026-11-25 12:50:04 INFO Connexion réussie pour user webmaster
+2026-11-25 12:50:13 Failed password for root from 10.0.0.41
+2026-11-25 12:50:28 INFO Connexion réussie pour user alice
+2026-11-25 12:50:43 INFO Connexion réussie pour user root
+2026-11-25 12:50:54 WARN Utilisation mémoire à 74%
+2026-11-25 12:51:04 WARN Certificat expire dans 10 jours
+2026-11-25 12:51:22 timeout waiting for response from db-primary
+2026-11-25 12:51:42 timeout during handshake with db-replica
+2026-11-25 12:51:57 INFO Connexion réussie pour user bob
+2026-11-25 12:52:12 WARN Certificat expire dans 13 jours
+2026-11-25 12:52:25 INFO Fichier access.log sauvegardé
+2026-11-25 12:52:37 INFO Requête traitée en 2911ms
+2026-11-25 12:52:48 INFO Fichier error.log sauvegardé
+2026-11-25 12:53:04 INFO Service nginx démarré
+2026-11-25 12:53:17 INFO Connexion réussie pour user backup
+2026-11-25 12:53:31 ERROR Fichier introuvable : /var/log/syslog
+2026-11-25 12:53:40 INFO Fichier error.log sauvegardé
+2026-11-25 12:53:50 INFO Requête traitée en 4696ms
+2026-11-25 12:54:10 INFO Connexion réussie pour user admin
+2026-11-25 12:54:25 WARN Utilisation mémoire à 73%
+2026-11-25 12:54:31 INFO Requête traitée en 2376ms
+2026-11-25 12:54:47 WARN Certificat expire dans 17 jours
+2026-11-25 12:55:01 timeout waiting for response from storage-02
+2026-11-25 12:55:10 WARN Utilisation mémoire à 78%
+2026-11-25 12:55:23 ERROR Timeout de la base de données après 1424ms
+2026-11-25 12:55:36 WARN Utilisation mémoire à 61%
+2026-11-25 12:55:51 WARN Certificat expire dans 23 jours
+2026-11-25 12:56:01 INFO Connexion réussie pour user bob
+2026-11-25 12:56:08 INFO Connexion réussie pour user backup
+2026-11-25 12:56:13 timeout waiting for response from db-replica
+2026-11-25 12:56:25 WARN Certificat expire dans 29 jours
+2026-11-25 12:56:35 INFO Connexion réussie pour user backup
+2026-11-25 12:56:40 Failed password for root from 10.0.0.241
+2026-11-25 12:56:53 INFO Requête traitée en 3415ms
+2026-11-25 12:57:12 ERROR Timeout de la base de données après 2123ms
+2026-11-25 12:57:25 INFO Fichier syslog sauvegardé
+2026-11-25 12:57:44 Failed password for root from 192.168.1.249
+2026-11-25 12:57:55 INFO Requête traitée en 298ms
+2026-11-25 12:58:02 INFO Requête traitée en 2922ms
+2026-11-25 12:58:19 WARN Certificat expire dans 27 jours
+2026-11-25 12:58:35 WARN Utilisation mémoire à 75%
+2026-11-25 12:58:48 ERROR Timeout de la base de données après 999ms
+2026-11-25 12:59:08 Failed password for root from 10.0.0.50
+2026-11-25 12:59:17 INFO Fichier error.log sauvegardé
+2026-11-25 12:59:36 INFO Connexion réussie pour user webmaster
+2026-11-25 12:59:56 ERROR Timeout de la base de données après 843ms
+2026-11-25 13:00:11 timeout waiting for response from storage-02
+2026-11-25 13:00:31 INFO Service redis démarré
+2026-11-25 13:00:49 INFO Service ssh démarré
+2026-11-25 13:00:59 INFO Service cron démarré
+2026-11-25 13:01:09 INFO Requête traitée en 1750ms
+2026-11-25 13:01:26 Failed password for root from 10.0.0.223
+2026-11-25 13:01:31 INFO Connexion réussie pour user admin
+2026-11-25 13:01:36 INFO Service postgresql démarré
+2026-11-25 13:01:50 WARN Utilisation mémoire à 81%
+2026-11-25 13:01:59 INFO Fichier auth.log sauvegardé
+2026-11-25 13:02:07 INFO Fichier error.log sauvegardé
+2026-11-25 13:02:20 Failed password for root from 10.0.0.137
+2026-11-25 13:02:25 WARN Utilisation mémoire à 74%
+2026-11-25 13:02:41 INFO Connexion réussie pour user root
+2026-11-25 13:03:01 INFO Requête traitée en 3541ms
+2026-11-25 13:03:14 INFO Requête traitée en 3943ms
+2026-11-25 13:03:34 INFO Connexion réussie pour user webmaster
+2026-11-25 13:03:41 INFO Connexion réussie pour user bob
+2026-11-25 13:03:47 INFO Connexion réussie pour user root
+2026-11-25 13:04:05 INFO Connexion réussie pour user root
+2026-11-25 13:04:16 Failed password for root from 10.0.0.246
+2026-11-25 13:04:28 WARN Certificat expire dans 9 jours
+2026-11-25 13:04:48 timeout waiting for response from db-primary
+2026-11-25 13:04:53 WARN Utilisation mémoire à 70%
+2026-11-25 13:05:12 INFO Service nginx démarré
+2026-11-25 13:05:29 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 13:05:48 WARN Utilisation mémoire à 97%
+2026-11-25 13:06:00 INFO Connexion réussie pour user alice
+2026-11-25 13:06:09 INFO Requête traitée en 1922ms
+2026-11-25 13:06:26 INFO Requête traitée en 757ms
+2026-11-25 13:06:38 INFO Requête traitée en 4484ms
+2026-11-25 13:06:54 WARN Utilisation mémoire à 91%
+2026-11-25 13:07:06 ERROR Fichier introuvable : /var/log/auth.log
+2026-11-25 13:07:20 WARN Certificat expire dans 4 jours
+2026-11-25 13:07:36 INFO Requête traitée en 4728ms
+2026-11-25 13:07:43 WARN Utilisation mémoire à 96%
+2026-11-25 13:08:00 WARN Certificat expire dans 28 jours
+2026-11-25 13:08:14 INFO Requête traitée en 4719ms
+2026-11-25 13:08:21 ERROR Timeout de la base de données après 3421ms
+2026-11-25 13:08:32 INFO Connexion réussie pour user backup
+2026-11-25 13:08:51 INFO Connexion réussie pour user backup
+2026-11-25 13:09:10 INFO Service redis démarré
+2026-11-25 13:09:30 ERROR Connexion refusée pour user bob
+2026-11-25 13:09:35 WARN Utilisation mémoire à 78%
+2026-11-25 13:09:46 INFO Connexion réussie pour user backup
+2026-11-25 13:10:05 INFO Connexion réussie pour user backup
+2026-11-25 13:10:19 INFO Connexion réussie pour user root
+2026-11-25 13:10:37 INFO Requête traitée en 4994ms
+2026-11-25 13:10:53 INFO Connexion réussie pour user webmaster
+2026-11-25 13:11:09 INFO Requête traitée en 1147ms
+2026-11-25 13:11:25 INFO Requête traitée en 617ms
+2026-11-25 13:11:32 WARN Utilisation mémoire à 63%
+2026-11-25 13:11:51 INFO Requête traitée en 2476ms
+2026-11-25 13:12:08 Failed password for root from 10.0.0.35
+2026-11-25 13:12:24 INFO Service ssh démarré
+2026-11-25 13:12:29 INFO Service ssh démarré
+2026-11-25 13:12:49 INFO Service postgresql démarré
+2026-11-25 13:13:08 timeout during handshake with db-primary
+2026-11-25 13:13:27 INFO Service postgresql démarré
+2026-11-25 13:13:47 WARN Utilisation mémoire à 77%
+2026-11-25 13:13:55 INFO Fichier error.log sauvegardé
+2026-11-25 13:14:13 INFO Requête traitée en 2764ms
+2026-11-25 13:14:29 INFO Connexion réussie pour user webmaster
+2026-11-25 13:14:41 INFO Connexion réussie pour user webmaster
+2026-11-25 13:14:49 ERROR Connexion refusée pour user backup
+2026-11-25 13:14:56 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 13:15:03 WARN Utilisation mémoire à 86%
+2026-11-25 13:15:21 WARN Certificat expire dans 5 jours
+2026-11-25 13:15:40 timeout waiting for response from db-primary
+2026-11-25 13:15:45 WARN Certificat expire dans 15 jours
+2026-11-25 13:15:55 timeout during handshake with cache-01
+2026-11-25 13:16:05 INFO Requête traitée en 2275ms
+2026-11-25 13:16:19 ERROR Timeout de la base de données après 2732ms
+2026-11-25 13:16:38 INFO Connexion réussie pour user alice
+2026-11-25 13:16:45 timeout during handshake with db-primary
+2026-11-25 13:16:59 INFO Requête traitée en 1937ms
+2026-11-25 13:17:10 ERROR Timeout de la base de données après 2154ms
+2026-11-25 13:17:20 timeout waiting for response from db-primary
+2026-11-25 13:17:40 INFO Fichier access.log sauvegardé
+2026-11-25 13:17:50 WARN Certificat expire dans 15 jours
+2026-11-25 13:18:07 INFO Connexion réussie pour user webmaster
+2026-11-25 13:18:13 ERROR Connexion refusée pour user alice
+2026-11-25 13:18:27 WARN Certificat expire dans 8 jours
+2026-11-25 13:18:44 INFO Connexion réussie pour user alice
+2026-11-25 13:18:59 INFO Service nginx démarré
+2026-11-25 13:19:17 INFO Connexion réussie pour user alice
+2026-11-25 13:19:27 INFO Fichier syslog sauvegardé
+2026-11-25 13:19:40 ERROR Fichier introuvable : /var/log/auth.log
+2026-11-25 13:19:59 ERROR Fichier introuvable : /var/log/backup.tar.gz
+2026-11-25 13:20:14 INFO Connexion réussie pour user bob
+2026-11-25 13:20:26 INFO Connexion réussie pour user admin
+2026-11-25 13:20:39 INFO Requête traitée en 2420ms
+2026-11-25 13:20:49 WARN Utilisation mémoire à 92%
+2026-11-25 13:21:07 WARN Certificat expire dans 24 jours
+2026-11-25 13:21:24 INFO Service postgresql démarré
+2026-11-25 13:21:41 INFO Service cron démarré
+2026-11-25 13:21:48 INFO Service postgresql démarré
+2026-11-25 13:22:04 timeout waiting for response from api-gateway
+2026-11-25 13:22:10 INFO Connexion réussie pour user backup
+2026-11-25 13:22:23 ERROR Connexion refusée pour user backup
+2026-11-25 13:22:35 INFO Fichier error.log sauvegardé
+2026-11-25 13:22:47 INFO Fichier syslog sauvegardé
+2026-11-25 13:22:54 INFO Requête traitée en 2150ms
+2026-11-25 13:23:03 INFO Service ssh démarré
+2026-11-25 13:23:09 ERROR Fichier introuvable : /var/log/auth.log
+2026-11-25 13:23:16 INFO Service ssh démarré
+2026-11-25 13:23:23 WARN Utilisation mémoire à 78%
+2026-11-25 13:23:39 ERROR Connexion refusée pour user bob
+2026-11-25 13:23:46 WARN Certificat expire dans 26 jours
+2026-11-25 13:24:03 ERROR Fichier introuvable : /var/log/syslog
+2026-11-25 13:24:14 Failed password for admin from 192.168.1.9
+2026-11-25 13:24:29 INFO Service ssh démarré
+2026-11-25 13:24:42 WARN Utilisation mémoire à 96%
+2026-11-25 13:25:02 INFO Service redis démarré
+2026-11-25 13:25:10 INFO Connexion réussie pour user webmaster
+2026-11-25 13:25:30 timeout during handshake with api-gateway
+2026-11-25 13:25:44 INFO Fichier syslog sauvegardé
+2026-11-25 13:26:03 INFO Service nginx démarré
+2026-11-25 13:26:20 Failed password for root from 10.0.0.215
+2026-11-25 13:26:30 WARN Certificat expire dans 15 jours
+2026-11-25 13:26:41 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 13:26:53 ERROR Connexion refusée pour user alice
+2026-11-25 13:27:00 INFO Requête traitée en 1683ms
+2026-11-25 13:27:19 Failed password for root from 192.168.1.98
+2026-11-25 13:27:36 WARN Utilisation mémoire à 87%
+2026-11-25 13:27:43 ERROR Fichier introuvable : /var/log/backup.tar.gz
+2026-11-25 13:27:49 Failed password for webmaster from 192.168.1.45
+2026-11-25 13:28:06 INFO Connexion réussie pour user alice
+2026-11-25 13:28:26 INFO Requête traitée en 4777ms
+2026-11-25 13:28:34 ERROR Fichier introuvable : /var/log/error.log
+2026-11-25 13:28:51 INFO Requête traitée en 4802ms
+2026-11-25 13:29:08 WARN Utilisation mémoire à 89%
+2026-11-25 13:29:16 INFO Service nginx démarré
+2026-11-25 13:29:23 WARN Utilisation mémoire à 71%
+2026-11-25 13:29:31 INFO Requête traitée en 1397ms
+2026-11-25 13:29:38 WARN Utilisation mémoire à 62%
+2026-11-25 13:29:56 ERROR Connexion refusée pour user backup
+2026-11-25 13:30:13 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 13:30:21 timeout during handshake with api-gateway
+2026-11-25 13:30:28 INFO Connexion réussie pour user webmaster
+2026-11-25 13:30:46 INFO Requête traitée en 2426ms
+2026-11-25 13:30:56 INFO Fichier error.log sauvegardé
+2026-11-25 13:31:07 INFO Service nginx démarré
+2026-11-25 13:31:18 WARN Utilisation mémoire à 76%
+2026-11-25 13:31:34 INFO Connexion réussie pour user alice
+2026-11-25 13:31:39 WARN Certificat expire dans 6 jours
+2026-11-25 13:31:59 INFO Service nginx démarré
+2026-11-25 13:32:12 INFO Fichier error.log sauvegardé
+2026-11-25 13:32:32 WARN Certificat expire dans 11 jours
+2026-11-25 13:32:50 INFO Service nginx démarré
+2026-11-25 13:33:01 INFO Service redis démarré
+2026-11-25 13:33:19 WARN Certificat expire dans 12 jours
+2026-11-25 13:33:30 Failed password for root from 10.0.0.11
+2026-11-25 13:33:44 WARN Certificat expire dans 9 jours
+2026-11-25 13:33:54 INFO Fichier error.log sauvegardé
+2026-11-25 13:34:07 WARN Certificat expire dans 17 jours
+2026-11-25 13:34:15 WARN Utilisation mémoire à 99%
+2026-11-25 13:34:22 WARN Utilisation mémoire à 69%
+2026-11-25 13:34:34 INFO Service postgresql démarré
+2026-11-25 13:34:52 INFO Requête traitée en 2366ms
+2026-11-25 13:35:05 WARN Utilisation mémoire à 60%
+2026-11-25 13:35:13 ERROR Timeout de la base de données après 4743ms
+2026-11-25 13:35:20 INFO Connexion réussie pour user alice
+2026-11-25 13:35:35 WARN Utilisation mémoire à 94%
+2026-11-25 13:35:53 INFO Connexion réussie pour user bob
+2026-11-25 13:36:01 INFO Requête traitée en 3268ms
+2026-11-25 13:36:21 Failed password for root from 10.0.0.197
+2026-11-25 13:36:34 INFO Requête traitée en 1277ms
+2026-11-25 13:36:43 INFO Requête traitée en 2485ms
+2026-11-25 13:37:02 WARN Utilisation mémoire à 67%
+2026-11-25 13:37:22 timeout during handshake with db-primary
+2026-11-25 13:37:32 ERROR Timeout de la base de données après 3007ms
+2026-11-25 13:37:51 WARN Utilisation mémoire à 66%
+2026-11-25 13:38:00 WARN Certificat expire dans 23 jours
+2026-11-25 13:38:19 INFO Requête traitée en 3875ms
+2026-11-25 13:38:37 INFO Service ssh démarré
+2026-11-25 13:38:54 WARN Certificat expire dans 24 jours
+2026-11-25 13:39:02 ERROR Timeout de la base de données après 1978ms
+2026-11-25 13:39:11 ERROR Fichier introuvable : /var/log/syslog
+2026-11-25 13:39:19 INFO Connexion réussie pour user webmaster
+2026-11-25 13:39:34 WARN Utilisation mémoire à 93%
+2026-11-25 13:39:48 ERROR Connexion refusée pour user admin
+2026-11-25 13:40:00 WARN Utilisation mémoire à 89%
+2026-11-25 13:40:12 INFO Service redis démarré
+2026-11-25 13:40:28 ERROR Fichier introuvable : /var/log/auth.log
+2026-11-25 13:40:44 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 13:41:01 INFO Fichier auth.log sauvegardé
+2026-11-25 13:41:09 timeout waiting for response from api-gateway
+2026-11-25 13:41:27 WARN Certificat expire dans 10 jours
+2026-11-25 13:41:45 WARN Certificat expire dans 28 jours
+2026-11-25 13:42:00 INFO Service nginx démarré
+2026-11-25 13:42:10 INFO Service nginx démarré
+2026-11-25 13:42:16 timeout during handshake with db-replica
+2026-11-25 13:42:26 INFO Service cron démarré
+2026-11-25 13:42:45 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 13:42:54 WARN Utilisation mémoire à 69%
+2026-11-25 13:43:01 WARN Certificat expire dans 22 jours
+2026-11-25 13:43:17 timeout during handshake with db-primary
+2026-11-25 13:43:31 timeout waiting for response from db-primary
+2026-11-25 13:43:38 INFO Fichier auth.log sauvegardé
+2026-11-25 13:43:45 WARN Utilisation mémoire à 74%
+2026-11-25 13:43:57 INFO Service cron démarré
+2026-11-25 13:44:13 WARN Certificat expire dans 14 jours
+2026-11-25 13:44:25 INFO Service nginx démarré
+2026-11-25 13:44:40 INFO Fichier error.log sauvegardé
+2026-11-25 13:44:52 WARN Utilisation mémoire à 99%
+2026-11-25 13:45:10 WARN Certificat expire dans 16 jours
+2026-11-25 13:45:18 INFO Fichier error.log sauvegardé
+2026-11-25 13:45:34 ERROR Fichier introuvable : /var/log/syslog
+2026-11-25 13:45:52 INFO Service redis démarré
+2026-11-25 13:46:12 INFO Requête traitée en 4187ms
+2026-11-25 13:46:23 WARN Utilisation mémoire à 83%
+2026-11-25 13:46:34 WARN Utilisation mémoire à 60%
+2026-11-25 13:46:42 ERROR Connexion refusée pour user alice
+2026-11-25 13:47:02 WARN Certificat expire dans 17 jours
+2026-11-25 13:47:08 INFO Service postgresql démarré
+2026-11-25 13:47:15 ERROR Connexion refusée pour user root
+2026-11-25 13:47:32 ERROR Timeout de la base de données après 4726ms
+2026-11-25 13:47:47 INFO Connexion réussie pour user alice
+2026-11-25 13:48:04 INFO Service postgresql démarré
+2026-11-25 13:48:10 WARN Utilisation mémoire à 96%
+2026-11-25 13:48:29 INFO Fichier syslog sauvegardé
+2026-11-25 13:48:38 Failed password for root from 10.0.0.53
+2026-11-25 13:48:46 ERROR Fichier introuvable : /var/log/auth.log
+2026-11-25 13:48:57 INFO Requête traitée en 3276ms
+2026-11-25 13:49:16 INFO Fichier access.log sauvegardé
+2026-11-25 13:49:31 WARN Certificat expire dans 8 jours
+2026-11-25 13:49:50 timeout waiting for response from api-gateway
+2026-11-25 13:50:00 INFO Fichier auth.log sauvegardé
+2026-11-25 13:50:12 Failed password for admin from 192.168.1.19
+2026-11-25 13:50:27 INFO Connexion réussie pour user bob
+2026-11-25 13:50:46 WARN Certificat expire dans 1 jours
+2026-11-25 13:50:55 INFO Connexion réussie pour user admin
+2026-11-25 13:51:09 WARN Certificat expire dans 23 jours
+2026-11-25 13:51:29 Failed password for bob from 192.168.1.62
+2026-11-25 13:51:34 WARN Certificat expire dans 14 jours
+2026-11-25 13:51:43 Failed password for admin from 192.168.1.181
+2026-11-25 13:51:59 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 13:52:04 ERROR Timeout de la base de données après 4429ms
+2026-11-25 13:52:10 Failed password for webmaster from 192.168.1.67
+2026-11-25 13:52:23 INFO Connexion réussie pour user backup
+2026-11-25 13:52:32 INFO Requête traitée en 336ms
+2026-11-25 13:52:44 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 13:52:50 ERROR Connexion refusée pour user root
+2026-11-25 13:53:09 INFO Fichier syslog sauvegardé
+2026-11-25 13:53:28 INFO Service ssh démarré
+2026-11-25 13:53:37 INFO Fichier auth.log sauvegardé
+2026-11-25 13:53:42 INFO Requête traitée en 2146ms
+2026-11-25 13:53:58 Failed password for root from 10.0.0.23
+2026-11-25 13:54:11 INFO Service ssh démarré
+2026-11-25 13:54:19 INFO Fichier access.log sauvegardé
+2026-11-25 13:54:26 Failed password for root from 10.0.0.26
+2026-11-25 13:54:33 INFO Fichier auth.log sauvegardé
+2026-11-25 13:54:48 WARN Utilisation mémoire à 81%
+2026-11-25 13:54:59 WARN Certificat expire dans 3 jours
+2026-11-25 13:55:11 INFO Service redis démarré
+2026-11-25 13:55:27 timeout during handshake with db-primary
+2026-11-25 13:55:42 INFO Requête traitée en 2449ms
+2026-11-25 13:56:02 INFO Service nginx démarré
+2026-11-25 13:56:17 WARN Certificat expire dans 28 jours
+2026-11-25 13:56:30 INFO Connexion réussie pour user backup
+2026-11-25 13:56:36 ERROR Connexion refusée pour user alice
+2026-11-25 13:56:44 WARN Certificat expire dans 24 jours
+2026-11-25 13:56:59 Failed password for root from 10.0.0.138
+2026-11-25 13:57:17 WARN Utilisation mémoire à 92%
+2026-11-25 13:57:34 INFO Service ssh démarré
+2026-11-25 13:57:40 ERROR Fichier introuvable : /var/log/backup.tar.gz
+2026-11-25 13:57:50 Failed password for root from 10.0.0.5
+2026-11-25 13:58:08 INFO Fichier syslog sauvegardé
+2026-11-25 13:58:18 INFO Fichier auth.log sauvegardé
+2026-11-25 13:58:33 INFO Requête traitée en 4459ms
+2026-11-25 13:58:50 Failed password for webmaster from 192.168.1.235
+2026-11-25 13:59:04 timeout waiting for response from db-primary
+2026-11-25 13:59:19 INFO Fichier error.log sauvegardé
+2026-11-25 13:59:26 INFO Service postgresql démarré
+2026-11-25 13:59:32 Failed password for alice from 192.168.1.86
+2026-11-25 13:59:45 INFO Service redis démarré
+2026-11-25 13:59:50 WARN Certificat expire dans 28 jours
+2026-11-25 14:00:07 INFO Requête traitée en 3404ms
+2026-11-25 14:00:27 ERROR Timeout de la base de données après 1155ms
+2026-11-25 14:00:41 WARN Utilisation mémoire à 88%
+2026-11-25 14:01:01 ERROR Connexion refusée pour user alice
+2026-11-25 14:01:12 WARN Certificat expire dans 2 jours
+2026-11-25 14:01:26 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 14:01:44 INFO Service nginx démarré
+2026-11-25 14:01:50 WARN Certificat expire dans 14 jours
+2026-11-25 14:02:08 ERROR Fichier introuvable : /var/log/syslog
+2026-11-25 14:02:26 INFO Fichier syslog sauvegardé
+2026-11-25 14:02:33 WARN Utilisation mémoire à 72%
+2026-11-25 14:02:42 WARN Utilisation mémoire à 75%
+2026-11-25 14:02:59 INFO Fichier error.log sauvegardé
+2026-11-25 14:03:18 INFO Fichier error.log sauvegardé
+2026-11-25 14:03:27 ERROR Fichier introuvable : /var/log/backup.tar.gz
+2026-11-25 14:03:33 INFO Service redis démarré
+2026-11-25 14:03:47 WARN Certificat expire dans 9 jours
+2026-11-25 14:03:58 WARN Certificat expire dans 25 jours
+2026-11-25 14:04:10 WARN Utilisation mémoire à 81%
+2026-11-25 14:04:29 WARN Certificat expire dans 30 jours
+2026-11-25 14:04:35 Failed password for admin from 192.168.1.26
+2026-11-25 14:04:53 Failed password for root from 10.0.0.35
+2026-11-25 14:04:58 Failed password for root from 10.0.0.233
+2026-11-25 14:05:16 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 14:05:24 INFO Requête traitée en 3733ms
+2026-11-25 14:05:38 ERROR Connexion refusée pour user webmaster
+2026-11-25 14:05:51 ERROR Fichier introuvable : /var/log/access.log
+2026-11-25 14:06:04 INFO Requête traitée en 2055ms
+2026-11-25 14:06:22 timeout during handshake with db-primary
+2026-11-25 14:06:36 INFO Requête traitée en 4944ms
+2026-11-25 14:06:55 timeout waiting for response from cache-01
+2026-11-25 14:07:09 WARN Utilisation mémoire à 65%
+2026-11-25 14:07:25 timeout waiting for response from cache-01
+2026-11-25 14:07:40 WARN Utilisation mémoire à 92%
+2026-11-25 14:07:47 INFO Fichier access.log sauvegardé
+2026-11-25 14:08:00 ERROR Timeout de la base de données après 1936ms
+2026-11-25 14:08:18 INFO Fichier error.log sauvegardé
+2026-11-25 14:08:34 INFO Service postgresql démarré
+2026-11-25 14:08:51 INFO Requête traitée en 1952ms
+2026-11-25 14:09:01 WARN Utilisation mémoire à 65%
+2026-11-25 14:09:13 WARN Utilisation mémoire à 97%
+2026-11-25 14:09:22 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 14:09:32 WARN Certificat expire dans 29 jours
+2026-11-25 14:09:47 ERROR Timeout de la base de données après 770ms
+2026-11-25 14:10:04 WARN Utilisation mémoire à 86%
+2026-11-25 14:10:11 WARN Utilisation mémoire à 70%
+2026-11-25 14:10:21 INFO Fichier syslog sauvegardé
+2026-11-25 14:10:31 INFO Service cron démarré
+2026-11-25 14:10:39 WARN Utilisation mémoire à 92%
+2026-11-25 14:10:44 WARN Certificat expire dans 3 jours
+2026-11-25 14:10:53 INFO Fichier access.log sauvegardé
+2026-11-25 14:11:08 INFO Fichier backup.tar.gz sauvegardé
+2026-11-25 14:11:15 INFO Connexion réussie pour user webmaster
+2026-11-25 14:11:29 ERROR Timeout de la base de données après 1072ms
+2026-11-25 14:11:34 Failed password for bob from 192.168.1.151
+2026-11-25 14:11:39 INFO Connexion réussie pour user webmaster
+2026-11-25 14:11:58 INFO Requête traitée en 1193ms
+2026-11-25 14:12:13 INFO Requête traitée en 4868ms
+2026-11-25 14:12:18 INFO Service ssh démarré
+2026-11-25 14:12:27 INFO Fichier error.log sauvegardé
+2026-11-25 14:12:32 INFO Connexion réussie pour user webmaster
+2026-11-25 14:12:48 INFO Service cron démarré
+2026-11-25 14:12:59 WARN Utilisation mémoire à 87%
+2026-11-25 14:13:07 Failed password for root from 10.0.0.84
+2026-11-25 14:13:26 INFO Requête traitée en 3704ms
+2026-11-25 14:13:45 INFO Fichier access.log sauvegardé
+2026-11-25 14:13:54 INFO Fichier auth.log sauvegardé
+2026-11-25 14:14:06 INFO Fichier syslog sauvegardé
+2026-11-25 14:14:18 INFO Connexion réussie pour user root
+2026-11-25 14:14:34 INFO Service cron démarré
+2026-11-25 14:14:49 INFO Fichier syslog sauvegardé
+2026-11-25 14:14:56 WARN Certificat expire dans 30 jours
+2026-11-25 14:15:06 INFO Connexion réussie pour user webmaster
+2026-11-25 14:15:12 INFO Requête traitée en 4202ms
+2026-11-25 14:15:31 INFO Connexion réussie pour user backup
+2026-11-25 14:15:43 WARN Utilisation mémoire à 79%
+2026-11-25 14:15:59 WARN Utilisation mémoire à 60%
+2026-11-25 14:16:04 INFO Service redis démarré
+2026-11-25 14:16:15 WARN Certificat expire dans 11 jours
+2026-11-25 14:16:28 ERROR Connexion refusée pour user admin
+2026-11-25 14:16:47 timeout during handshake with storage-02
+2026-11-25 14:17:01 ERROR Timeout de la base de données après 2628ms
+2026-11-25 14:17:11 INFO Fichier auth.log sauvegardé
+2026-11-25 14:17:16 Failed password for root from 10.0.0.6
+2026-11-25 14:17:36 INFO Service ssh démarré
+2026-11-25 14:17:54 ERROR Timeout de la base de données après 3354ms
+2026-11-25 14:18:01 WARN Certificat expire dans 26 jours
+2026-11-25 14:18:09 WARN Certificat expire dans 22 jours
+2026-11-25 14:18:21 INFO Fichier access.log sauvegardé
+2026-11-25 14:18:34 INFO Connexion réussie pour user admin
+2026-11-25 14:18:40 WARN Utilisation mémoire à 66%
+2026-11-25 14:18:54 WARN Utilisation mémoire à 97%
+2026-11-25 14:19:04 INFO Connexion réussie pour user root
+2026-11-25 14:19:12 WARN Utilisation mémoire à 67%
+2026-11-25 14:19:32 WARN Utilisation mémoire à 83%
+2026-11-25 14:19:37 INFO Service ssh démarré
+2026-11-25 14:19:42 INFO Connexion réussie pour user backup
+2026-11-25 14:19:53 INFO Connexion réussie pour user admin
+2026-11-25 14:20:04 INFO Service cron démarré
+2026-11-25 14:20:21 WARN Certificat expire dans 8 jours
+2026-11-25 14:20:40 INFO Fichier auth.log sauvegardé
+2026-11-25 14:20:50 INFO Requête traitée en 4705ms
+2026-11-25 14:21:03 INFO Service nginx démarré
+2026-11-25 14:21:14 INFO Requête traitée en 2502ms
+2026-11-25 14:21:21 INFO Service cron démarré
+2026-11-25 14:21:31 WARN Certificat expire dans 5 jours
+2026-11-25 14:21:47 INFO Requête traitée en 3629ms
+2026-11-25 14:22:05 WARN Utilisation mémoire à 73%
+2026-11-25 14:22:23 INFO Connexion réussie pour user root
+2026-11-25 14:22:37 ERROR Timeout de la base de données après 1856ms
+2026-11-25 14:22:57 Failed password for root from 10.0.0.193
+2026-11-25 14:23:06 timeout during handshake with db-primary
+2026-11-25 14:23:19 INFO Service cron démarré
+2026-11-25 14:23:39 INFO Requête traitée en 1813ms
+2026-11-25 14:23:57 WARN Certificat expire dans 3 jours
+2026-11-25 14:24:11 WARN Certificat expire dans 20 jours
+2026-11-25 14:24:26 WARN Utilisation mémoire à 68%
+2026-11-25 14:24:39 WARN Certificat expire dans 28 jours
+2026-11-25 14:24:58 INFO Requête traitée en 3551ms
+2026-11-25 14:25:13 INFO Service nginx démarré
+2026-11-25 14:25:23 INFO Fichier auth.log sauvegardé
+2026-11-25 14:25:39 INFO Requête traitée en 4663ms
+2026-11-25 14:25:54 INFO Service ssh démarré
+2026-11-25 14:26:08 ERROR Timeout de la base de données après 2173ms
+2026-11-25 14:26:16 WARN Certificat expire dans 2 jours
+2026-11-25 14:26:32 WARN Certificat expire dans 2 jours
+2026-11-25 14:26:50 timeout during handshake with storage-02

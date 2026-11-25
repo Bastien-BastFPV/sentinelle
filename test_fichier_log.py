@@ -1,3 +1,4 @@
+import rapport
 fichier = "exemple.log"
 num_ligne = 0
 nb_error = 0
@@ -48,5 +49,3 @@ with open(fichier, "r", encoding="utf-8") as fichier:
         timeout_test(ligne, num_ligne)
         warn_test(ligne, num_ligne)
         info_test(ligne, num_ligne)
-
-print(f"le fichier contient: {nb_error} erreurs, {nb_failed} failed, {nb_timeout}, timeout, {nb_warning} warnings, {nb_info} infos ; Nombre totale d'erreurs: {nb_error+nb_failed+nb_timeout+nb_warning+nb_info}")
